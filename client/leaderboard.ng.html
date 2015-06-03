@@ -1,0 +1,15 @@
+<div ng-controller="leaderBoardCtrl">
+    <ol class="leaderboard" >
+        <li ng-repeat = "player in players track by player._id" class="player" ng-class="selected(player)"  ng-click="selectPlayer(player)">
+            <span class="name">{{player.name}}</span>
+            <span class="score">{{player.score}}</span>
+        </li>
+    </ol>
+
+    <div class="details" ng-show = "selectedName()">
+        <div class="name">{{selectedName()}}</div>
+        <button class="inc" ng-click="addPoints()">Add 5 points</button>
+    </div>
+    <div class="message" ng-show = "!selectedName()">Click a player to select</div>
+
+</div>
