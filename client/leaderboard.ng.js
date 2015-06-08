@@ -9,7 +9,7 @@ angular.module('LeaderBoard',[
     'ngAnimate'
 ])
 
-.controller ('leaderBoardCtrl', function ($scope){
+.controller ('leaderBoardCtrl', function ($scope, $meteor){
 
     /*
     Template.leaderboard.helpers({
@@ -26,10 +26,6 @@ angular.module('LeaderBoard',[
     $scope.players = $scope.$meteorCollection(function (){
         return Players.find({}, { sort: { score: -1, name: 1 } });
     });
-    $scope.selectedName = function () {
-        var player = Players.findOne(Session.get("selectedPlayer"));
-        return player && player.name;
-    };
 
     /*
      Template.leaderboard.events({
@@ -51,18 +47,20 @@ angular.module('LeaderBoard',[
      });
      */
 
+    $scope.selectedPlayer = undefined;
+
     $scope.addPoints = function () {
-        _.find ($scope.players, function (e){
-            return e._id === Session.get("selectedPlayer");
-        }).score+=5;
+        if ($scope.selectedPlayer) {
+            $scope.selectedPlayer.score +=5;
+        }
     };
 
-    $scope.selected = function (player) {
-        return Session.equals("selectedPlayer", player._id) ? "selected" : '';
+    $scope.isSelected = function (player) {
+        return $scope.selectedPlayer && $scope.selectedPlayer._id === player._id;
     };
 
     $scope.selectPlayer = function (player){
-         Session.set("selectedPlayer", player._id);
+        $scope.selectedPlayer = $scope.$meteorObject (Players, player._id) ;
     };
     
 });
